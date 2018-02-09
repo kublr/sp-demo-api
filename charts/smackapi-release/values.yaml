@@ -1,0 +1,15 @@
+service:
+  name: smackapi
+  internalPort: 8020
+
+image:
+  repository: alex202/brigade-smackapi
+  pullPolicy: Always
+  tag: master-42a2f89
+replicaCount: 1
+resources:
+#  cpu: 100m
+#  memory: 128Mi
+  #requests:
+  #  cpu: 100m
+  #  memory: 128Mi
