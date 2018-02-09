@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 
-def projectName = "apiserver-release"
+def projectName = "apiserver"
 def imageName = "kublr/demo-apiserver"
 
 def gitCommit = null
