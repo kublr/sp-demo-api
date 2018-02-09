@@ -14,5 +14,5 @@ spec:
       targetPort: {{ .Values.service.internalPort }}
       name: http-{{ .Values.service.name }}
   selector:
-    app: {{ template "name" . }}
+    app: {{ .Release.Name }}
     #release: {{ .Release.Name }}
