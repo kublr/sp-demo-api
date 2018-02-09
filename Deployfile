@@ -1,5 +1,9 @@
 #!/usr/bin/env groovy
 
+def projectName = "apiserver"
+def dockerhubRepo = "demo-apiserver"
+
+
 podTemplate(label: 'mypod', containers: [
     containerTemplate(name: 'helm', image: 'lachlanevenson/k8s-helm:latest', command: 'cat', ttyEnabled: true)
   ],
@@ -12,7 +16,7 @@ podTemplate(label: 'mypod', containers: [
         checkout scm
 
         // print environment variables
-        echo sh(script: 'env|sort', returnStdout: true)
+        //echo sh(script: 'env|sort', returnStdout: true)
 
         stage('do some helm work') {
             container('helm') {
@@ -21,14 +25,14 @@ podTemplate(label: 'mypod', containers: [
 
                     sh "helm ls"
 
-                    sh "helm lint smackapi"
+                    sh "helm lint service"
 
                     sh """
-                        helm upgrade -i smackapi --set istio.enabled=true \
+                        helm upgrade -i ${projectName} --set istio.enabled=true \
                             --set istio.release.enabled=true --set istio.tags.enabled=false \
                             --set routes.v1.release=${env.V1_RELEASE} --set routes.v1.weight=${env.V1_WEIGHT} \
                             --set routes.v2.release=${env.V2_RELEASE} --set routes.v2.weight=${env.V2_WEIGHT} \
-                        smackapi
+                        service
                      """
                 }
             }

@@ -1,4 +1,4 @@
-name: smackapi-release
+name: release
 home: https://github.com/alex-egorov/brigade-smackapi
 version: 1.1
 description: Simple web app for demonstrating Kubernetes

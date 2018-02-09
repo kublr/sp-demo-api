@@ -1,5 +1,5 @@
 service:
-  name: smackapi
+  name: service
   type: ClusterIP
   externalPort: 80
   internalPort: 8020
@@ -12,9 +12,9 @@ istio:
 routes:
   v1:
     weight: 80
-    release: smackapi-v1
+    release: apiserver-v1
     tag: pr1-07d3ba5
   v2:
     weight: 20
-    release: smackapi-v2
+    release: apiserver-v2
     tag:  master-4c5a465

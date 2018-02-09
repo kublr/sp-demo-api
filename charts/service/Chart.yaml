@@ -1,0 +1,4 @@
+name: service
+version: 1.1
+description: Simple web app for demonstrating Kubernetes
+

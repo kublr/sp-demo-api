@@ -1,11 +1,11 @@
 service:
-  name: smackapi
+  name: apiserver
   internalPort: 8020
 
 image:
-  repository: alex202/brigade-smackapi
+  repository: kublr/demo-apiserver
   pullPolicy: Always
-  tag: master-42a2f89
+  tag: master-testing
 replicaCount: 1
 resources:
 #  cpu: 100m

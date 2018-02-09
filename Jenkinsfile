@@ -1,8 +1,7 @@
 #!/usr/bin/env groovy
 
-
-def projectName = "smackapi"
-def imageName = "alex202/brigade-smackapi"
+def projectName = "apiserver"
+def imageName = "kublr/demo-apiserver"
 
 def gitCommit = null
 def gitBranch = null
@@ -70,11 +69,11 @@ DOCKER_IMAGE_TAG=${imageTag}
                 sh """
                     go env
                     ls -la
-                    mkdir -p /go/src/github.com/alex-egorov
-                    ln -s $pwd /go/src/github.com/alex-egorov/
-                    cd /go/src/github.com/alex-egorov/${projectName}
+                    mkdir -p /go/src/github.com/kublr
+                    ln -s $pwd /go/src/github.com/kublr/
+                    cd /go/src/github.com/kublr/${projectName}
                     go get -v
-                    GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -v -o target/${projectName}
+                    GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -v -o target/smackapi
 
                     ls -la
                 """
@@ -114,11 +113,10 @@ DOCKER_IMAGE_TAG=${imageTag}
             container('helm') {
 
                 dir("charts") {
+                    sh "helm lint release"
+                    sh "helm upgrade -i ${projectName}-v${env.BUILD_NUMBER} --set image.tag=${imageTag} release"
 
                     sh "helm ls"
-
-                    sh "helm lint smackapi-release"
-                    sh "helm upgrade -i smackapi-v${env.BUILD_NUMBER} --set image.tag=${imageTag} smackapi-release"
                 }
             }
         }
