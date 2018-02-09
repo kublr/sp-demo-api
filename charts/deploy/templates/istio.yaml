@@ -23,7 +23,7 @@ spec:
 apiVersion: config.istio.io/v1alpha2
 kind: RouteRule
 metadata:
-  name: {{ .Release.Name }-release
+  name: {{ .Release.Name }}-release
 spec:
   destination:
     name: {{ template "fullname" . }}
@@ -41,7 +41,7 @@ spec:
 apiVersion: config.istio.io/v1alpha2
 kind: RouteRule
 metadata:
-  name: {{ .Release.Name }-tags
+  name: {{ .Release.Name }}-tags
 spec:
   destination:
     name: {{ template "fullname" . }}
@@ -58,7 +58,7 @@ spec:
 apiVersion: config.istio.io/v1alpha2
 kind: RouteRule
 metadata:
-  name: {{ .Release.Name }-v1
+  name: {{ .Release.Name }}-v1
 spec:
   destination:
     name: {{ template "name" . }}
@@ -75,7 +75,7 @@ spec:
 apiVersion: config.istio.io/v1alpha2
 kind: RouteRule
 metadata:
-  name: {{ .Release.Name }-v2
+  name: {{ .Release.Name }}-v2
 spec:
   destination:
     name: {{ template "name" . }}
