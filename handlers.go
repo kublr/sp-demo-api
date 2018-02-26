@@ -6,8 +6,9 @@ import (
 	"io"
 	"math/rand"
 	"net/http"
-	"os"
 	"time"
+	"github.com/prometheus/client_golang/prometheus"
+	"strings"
 )
 
 type Config struct {
@@ -27,23 +28,25 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 }
 
 func returnConfig(w http.ResponseWriter, r *http.Request) {
-	var appVersion = os.Getenv("IMAGE_TAG")
-	var backColor = "DarkRed"
-	var imageBuildDate = os.Getenv("IMAGE_BUILD_DATE")
-	var kubeNodeName = os.Getenv("KUBE_NODE_NAME")
-	var kubePodName = os.Getenv("KUBE_POD_NAME")
-	var kubePodIP = os.Getenv("KUBE_POD_IP")
+	start := time.Now()
+	code := http.StatusInternalServerError
 
-	if len(appVersion) == 0 {
-		appVersion = "master-testing"
-	}
+	defer func() { // Make sure we record a status.
+		duration := time.Since(start)
+		PrometheusHTTPRequestCount.WithLabelValues(fmt.Sprintf("%v", code), appVersion, backColor, hostname, "getconfig").Inc()
+		PrometheusHTTPRequestLatency.WithLabelValues(fmt.Sprintf("%v", code), appVersion, backColor, hostname, "getconfig").Observe(duration.Seconds())
+	}()
+
 	configs := Config{Key: "10", BackColor: backColor, AppVersion: appVersion, BuildDate: imageBuildDate, KubeNodeName: kubeNodeName, KubePodName: kubePodName, KubePodIP: kubePodIP}
 
 	// insert simulated delay if color is red
-	if backColor == "red" {
-		r := random(50, 100)
-		time.Sleep(time.Duration(r) * time.Millisecond)
+	var delay int
+	if strings.Contains(strings.ToUpper(backColor), "RED") {
+		delay = random(50, 1000)
+	} else {
+		delay = random(20, 200)
 	}
+	time.Sleep(time.Duration(delay) * time.Millisecond)
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
@@ -51,6 +54,8 @@ func returnConfig(w http.ResponseWriter, r *http.Request) {
 	if err := json.NewEncoder(w).Encode(configs); err != nil {
 		panic(err)
 	}
+
+	code = http.StatusOK
 }
 
 func random(min, max int) int {
@@ -70,4 +75,8 @@ func HealthCheckHandler(w http.ResponseWriter, r *http.Request) {
 	//w.WriteHeader(http.StatusBadGateway)
 	w.Header().Set("Content-Type", "application/json")
 	io.WriteString(w, `{"alive": true}`)
+}
+
+func metricHandler(w http.ResponseWriter, r *http.Request) {
+	prometheus.Handler().ServeHTTP(w, r)
 }
