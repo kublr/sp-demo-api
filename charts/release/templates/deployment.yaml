@@ -15,9 +15,9 @@ spec:
         app: {{ .Values.service.name }}
         release: {{ .Release.Name }}
         tag: {{ .Values.image.tag | quote }}
-    annotations:
-      prometheus.io/scrape: 'true'
-      prometheus.io/port: {{ .Values.service.internalPort }}
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: {{ .Values.service.internalPort | quote }}
     spec:
       containers:
       - name: {{ .Chart.Name }}
