@@ -42,13 +42,14 @@ func returnConfig(w http.ResponseWriter, r *http.Request) {
 	// insert simulated delay if color is red
 	var delay int
 	if strings.Contains(strings.ToUpper(backColor), "RED") {
-		//delay = random(50, 1000)
-		delay = 500
+		delay = random(50, 1000)
+		//delay = 500
 	} else if strings.Contains(strings.ToUpper(backColor), "BLUE"){
-		//delay = random(20, 200)
-		delay = 100
+		delay = random(20, 200)
+		//delay = 100
 	} else {
-		delay = 50
+		delay = random(10, 100)
+		//delay = 50
 	}
 	time.Sleep(time.Duration(delay) * time.Millisecond)
 
