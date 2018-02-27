@@ -8,7 +8,7 @@ import (
 )
 var (
 	appVersion = os.Getenv("IMAGE_TAG")
-	backColor = "DarkRed"
+	backColor = "DarkBlue"
 	imageBuildDate = os.Getenv("IMAGE_BUILD_DATE")
 	kubeNodeName = os.Getenv("KUBE_NODE_NAME")
 	kubePodName = os.Getenv("KUBE_POD_NAME")
