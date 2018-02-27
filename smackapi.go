@@ -20,7 +20,7 @@ var (
 	PrometheusHTTPRequestCount = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
 			Namespace: "smackapi",
-			Name: "http_request_duration_microseconds_count",
+			Name: "http_request_count",
 			Help: "The number of HTTP requests.",
 		},
 		[]string{"code", "appVersion", "backColor", "hostname", "request"},
@@ -29,7 +29,7 @@ var (
 	PrometheusHTTPRequestLatency = prometheus.NewHistogramVec(
 		prometheus.HistogramOpts{
 			Namespace: "smackapi",
-			Name: "http_request_duration_microseconds",
+			Name: "http_request_latency",
 			Help: "The latency of HTTP requests.",
 		},
 		[]string{"code", "appVersion", "backColor", "hostname", "request"},
