@@ -7,7 +7,7 @@ import (
 	"os"
 )
 var (
-	backColor = "DarkBlue"
+	backColor = "DarkRed"
 	appVersion = os.Getenv("IMAGE_TAG")
 	imageBuildDate = os.Getenv("IMAGE_BUILD_DATE")
 	kubeNodeName = os.Getenv("KUBE_NODE_NAME")
