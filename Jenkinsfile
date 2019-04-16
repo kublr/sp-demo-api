@@ -9,8 +9,7 @@ def imageTag = null
 def buildDate = null
 
 podTemplate(label: 'jnlp-slave', containers: [
-    containerTemplate(name: 'golang', image: 'golang:1.9', ttyEnabled: true, command: 'cat'),
-    containerTemplate(name: 'docker', image: 'docker', ttyEnabled: true, command: 'cat')
+    containerTemplate(name: 'golang', image: 'alex202/jnlp-slave:1.0')
   ],
   envVars: [
 
@@ -21,7 +20,7 @@ podTemplate(label: 'jnlp-slave', containers: [
 
     node('jnlp-slave') {
 
-        sh 'mkdir -p /go/src/github.com/kublr'
+        sh "mkdir -p $HOME/go/src/github.com/kublr"
         checkout scm
         dir(projectName) {
 
