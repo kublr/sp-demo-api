@@ -21,7 +21,7 @@ podTemplate(label: 'jnlp-slave', containers: [
 
     node('jnlp-slave') {
 
-        mkdir -p /go/src/github.com/kublr
+        sh 'mkdir -p /go/src/github.com/kublr'
         checkout scm
         dir(projectName) {
 
