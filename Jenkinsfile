@@ -8,11 +8,9 @@ def gitBranch = null
 def imageTag = null
 def buildDate = null
 
-podTemplate(label: 'mypod', containers: [
+podTemplate(label: 'jnlp-slave', containers: [
     containerTemplate(name: 'golang', image: 'golang:1.9', ttyEnabled: true, command: 'cat'),
-    containerTemplate(name: 'docker', image: 'docker', ttyEnabled: true, command: 'cat'),
-    containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.0', command: 'cat', ttyEnabled: true),
-    containerTemplate(name: 'helm', image: 'lachlanevenson/k8s-helm:v2.7.2', command: 'cat', ttyEnabled: true)
+    containerTemplate(name: 'docker', image: 'docker', ttyEnabled: true, command: 'cat')
   ],
   envVars: [
 
@@ -21,9 +19,11 @@ podTemplate(label: 'mypod', containers: [
     hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
   ]) {
 
-    node('mypod') {
+    node('jnlp-slave') {
 
+        mkdir -p /go/src/github.com/kublr
         checkout scm
+        dir(projectName) {
 
         // print environment variables
         //echo sh(script: 'env|sort', returnStdout: true)
@@ -102,24 +102,7 @@ DOCKER_IMAGE_TAG=${imageTag}
                 }
             }
         }
-/*
-        stage('do some kubectl work') {
-            container('kubectl') {
-
-                sh "kubectl get nodes --all-namespaces"
-            }
         }
-        stage('do some helm work') {
-            container('helm') {
 
-                dir("charts") {
-                    sh "helm lint release"
-                    sh "helm upgrade -i ${projectName}-v${env.BUILD_NUMBER} --set image.tag=${imageTag} release"
-
-                    sh "helm ls"
-                }
-            }
-        }
-*/
     }
 }
