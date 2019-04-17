@@ -8,8 +8,11 @@ def gitBranch = null
 def imageTag = null
 def buildDate = null
 
-podTemplate(label: 'jnlp-slave', containers: [
-    containerTemplate(name: 'golang', image: 'alex202/jnlp-slave:1.0')
+podTemplate(label: 'mypod', containers: [
+    containerTemplate(name: 'golang', image: 'golang:1.9', ttyEnabled: true, command: 'cat'),
+    containerTemplate(name: 'docker', image: 'docker', ttyEnabled: true, command: 'cat'),
+    containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.0', command: 'cat', ttyEnabled: true),
+    containerTemplate(name: 'helm', image: 'lachlanevenson/k8s-helm:v2.7.2', command: 'cat', ttyEnabled: true)
   ],
   envVars: [
 
@@ -18,11 +21,9 @@ podTemplate(label: 'jnlp-slave', containers: [
     hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
   ]) {
 
-    node('jnlp-slave') {
+    node('mypod') {
 
-        sh "mkdir -p $HOME/go/src/github.com/kublr"
         checkout scm
-        dir(projectName) {
 
         // print environment variables
         //echo sh(script: 'env|sort', returnStdout: true)
@@ -69,8 +70,9 @@ DOCKER_IMAGE_TAG=${imageTag}
                     go env
                     ls -la
                     mkdir -p /go/src/github.com/kublr
-                    ln -s $pwd /go/src/github.com/kublr/
+                    ln -s $pwd /go/src/github.com/kublr/${projectName}
                     cd /go/src/github.com/kublr/${projectName}
+                    ls -la
                     go get -v
                     GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -v -o target/smackapi
 
@@ -101,7 +103,24 @@ DOCKER_IMAGE_TAG=${imageTag}
                 }
             }
         }
-        }
+/*
+        stage('do some kubectl work') {
+            container('kubectl') {
 
+                sh "kubectl get nodes --all-namespaces"
+            }
+        }
+        stage('do some helm work') {
+            container('helm') {
+
+                dir("charts") {
+                    sh "helm lint release"
+                    sh "helm upgrade -i ${projectName}-v${env.BUILD_NUMBER} --set image.tag=${imageTag} release"
+
+                    sh "helm ls"
+                }
+            }
+        }
+*/
     }
 }
