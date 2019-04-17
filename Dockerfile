@@ -18,9 +18,9 @@ ENV IMAGE_BUILD_DATE $BUILD_DATE
 ENV IMAGE_TAG $IMAGE_TAG_REF
 
 WORKDIR /app
-ADD target/smackapi /app/
+ADD target/demo-apiserver /app/
 
-RUN chmod +x /app/smackapi
+RUN chmod +x /app/demo-apiserver
 
-ENTRYPOINT /app/smackapi
+ENTRYPOINT /app/demo-apiserver
 EXPOSE 8020

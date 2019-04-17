@@ -74,7 +74,7 @@ DOCKER_IMAGE_TAG=${imageTag}
                     cd /go/src/github.com/kublr/${projectName}
                     ls -la
                     go get -v
-                    GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -v -o target/smackapi
+                    GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -v -o target/demo-apiserver
 
                     ls -la
                 """
@@ -103,24 +103,5 @@ DOCKER_IMAGE_TAG=${imageTag}
                 }
             }
         }
-/*
-        stage('do some kubectl work') {
-            container('kubectl') {
-
-                sh "kubectl get nodes --all-namespaces"
-            }
-        }
-        stage('do some helm work') {
-            container('helm') {
-
-                dir("charts") {
-                    sh "helm lint release"
-                    sh "helm upgrade -i ${projectName}-v${env.BUILD_NUMBER} --set image.tag=${imageTag} release"
-
-                    sh "helm ls"
-                }
-            }
-        }
-*/
     }
 }
