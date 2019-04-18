@@ -8,6 +8,8 @@ def gitBranch = null
 def imageTag = null
 def buildDate = null
 
+def version = "0.1"
+
 podTemplate(label: 'mypod', containers: [
     containerTemplate(name: 'golang', image: 'golang:1.9', ttyEnabled: true, command: 'cat'),
     containerTemplate(name: 'docker', image: 'docker', ttyEnabled: true, command: 'cat'),
@@ -26,7 +28,7 @@ podTemplate(label: 'mypod', containers: [
         checkout scm
 
         // print environment variables
-        //echo sh(script: 'env|sort', returnStdout: true)
+        echo sh(script: 'env|sort', returnStdout: true)
 
         sh "git rev-parse --short HEAD > .git/commit-id"
         gitCommit = readFile('.git/commit-id').trim()
@@ -54,7 +56,7 @@ BUILD_NUMBER=${env.BUILD_NUMBER}
 BUILD_DATE=${buildDate}
 BUILD_GIT_COMMIT=${gitCommit}
 BUILD_GIT_BRANCH=${gitBranch}
-DOCKER_IMAGE_TAG=${imageTag}
+DOCKER_IMAGE_TAG=${version}.${env.BUILD_NUMBER}
 """
 
         echo buildInfo
